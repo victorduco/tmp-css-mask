@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Маски + SVG Фильтры</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- SVG с анимированными масками и фильтрами -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <!-- SVG Фильтры -->
+            <filter id="blur">
+                <feGaussianBlur stdDeviation="3"/>
+            </filter>
+
+            <filter id="brightness">
+                <feComponentTransfer>
+                    <feFuncA type="discrete" tableValues="0 .5 .5 .7 .7 1"/>
+                </feComponentTransfer>
+            </filter>
+
+            <filter id="sepia">
+                <feColorMatrix type="matrix"
+                    values="0.393 0.769 0.189 0 0
+                            0.349 0.686 0.168 0 0
+                            0.272 0.534 0.131 0 0
+                            0 0 0 1 0"/>
+            </filter>
+
+            <filter id="saturate">
+                <feColorMatrix type="saturate" values="2"/>
+            </filter>
+
+            <filter id="contrast">
+                <feComponentTransfer>
+                    <feFuncA type="discrete" tableValues="0 .2 .4 .8 1"/>
+                </feComponentTransfer>
+            </filter>
+
+            <filter id="hueRotate">
+                <feColorMatrix type="hueRotate" values="180"/>
+            </filter>
+
+            <!-- Увеличенные анимированные маски -->
+
+            <!-- Маска 1: вращающийся круг -->
+            <mask id="mask1">
+                <rect width="100%" height="100%" fill="black"/>
+                <circle cx="300" cy="200" r="120" fill="white">
+                    <animateTransform
+                        attributeName="transform"
+                        type="rotate"
+                        values="0 300 200; 360 300 200"
+                        dur="4s"
+                        repeatCount="indefinite"/>
+                </circle>
+            </mask>
+
+            <!-- Маска 2: масштабирующийся квадрат -->
+            <mask id="mask2">
+                <rect width="100%" height="100%" fill="black"/>
+                <rect x="600" y="150" width="150" height="150" fill="white">
+                    <animateTransform
+                        attributeName="transform"
+                        type="scale"
+                        values="1; 1.5; 1"
+                        dur="3s"
+                        repeatCount="indefinite"/>
+                </rect>
+            </mask>
+
+            <!-- Маска 3: движущийся круг -->
+            <mask id="mask3">
+                <rect width="100%" height="100%" fill="black"/>
+                <circle cx="900" cy="300" r="100" fill="white">
+                    <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        values="0,0; 80,-80; 0,-160; -80,-80; 0,0"
+                        dur="5s"
+                        repeatCount="indefinite"/>
+                </circle>
+            </mask>
+
+            <!-- Маска 4: пульсирующий круг -->
+            <mask id="mask4">
+                <rect width="100%" height="100%" fill="black"/>
+                <circle cx="200" cy="500" r="90" fill="white">
+                    <animateTransform
+                        attributeName="transform"
+                        type="scale"
+                        values="1; 0.5; 1.8; 1"
+                        dur="2s"
+                        repeatCount="indefinite"/>
+                </circle>
+            </mask>
+
+            <!-- Маска 5: комбинированная анимация -->
+            <mask id="mask5">
+                <rect width="100%" height="100%" fill="black"/>
+                <circle cx="1200" cy="250" r="110" fill="white">
+                    <animateTransform
+                        attributeName="transform"
+                        type="rotate"
+                        values="0 1200 250; 360 1200 250"
+                        dur="6s"
+                        repeatCount="indefinite"/>
+                    <animateTransform
+                        attributeName="transform"
+                        type="scale"
+                        values="1; 1.3; 0.7; 1"
+                        dur="4s"
+                        repeatCount="indefinite"
+                        additive="sum"/>
+                </circle>
+            </mask>
+
+            <!-- НОВАЯ Маска 6: вращающийся прямоугольник -->
+            <mask id="mask6">
+                <rect width="100%" height="100%" fill="black"/>
+                <rect x="700" y="450" width="200" height="80" fill="white">
+                    <animateTransform
+                        attributeName="transform"
+                        type="rotate"
+                        values="0 800 490; 360 800 490"
+                        dur="3s"
+                        repeatCount="indefinite"/>
+                </rect>
+            </mask>
+        </defs>
+    </svg>
+
+    <div class="container">
+        <!-- Отдельные слои фона с разными фильтрами и масками -->
+
+        <!-- Слой 1: Размытие -->
+        <div class="background-layer layer1"></div>
+
+        <!-- Слой 2: Яркость -->
+        <div class="background-layer layer2"></div>
+
+        <!-- Слой 3: Сепия -->
+        <div class="background-layer layer3"></div>
+
+        <!-- Слой 4: Насыщенность -->
+        <div class="background-layer layer4"></div>
+
+        <!-- Слой 5: Контраст -->
+        <div class="background-layer layer5"></div>
+
+        <!-- Слой 6: Поворот цвета -->
+        <div class="background-layer layer6"></div>
+
+        <!-- Контент для скролла -->
+        <div class="content">
+            <h1>Многослойные фоны с SVG фильтрами</h1>
+            <p>Каждый слой имеет свой SVG фильтр и анимированную маску:</p>
+            <ul>
+                <li>Слой 1: Размытие + вращающийся круг</li>
+                <li>Слой 2: Яркость + масштабирующийся квадрат</li>
+                <li>Слой 3: Сепия + движущийся круг</li>
+                <li>Слой 4: Насыщенность + пульсирующий круг</li>
+                <li>Слой 5: Контраст + комбинированная анимация</li>
+                <li>Слой 6: Поворот цвета + вращающийся прямоугольник</li>
+            </ul>
+            <div class="scroll-content">
+                <h2>Тест скролла</h2>
+                <p>Все слои прокручиваются нормально.</p>
+                <p>Каждый фон статичен, анимируются только маски.</p>
+                <p>Lorem ipsum dolor sit amet consectetur.</p>
+                <p>Sed do eiusmod tempor incididunt ut labore.</p>
+                <p>Ut enim ad minim veniam quis nostrud.</p>
+                <p>Duis aute irure dolor in reprehenderit.</p>
+                <p>Excepteur sint occaecat cupidatat non proident.</p>
+                <p>Sed ut perspiciatis unde omnis iste natus.</p>
+                <p>Lorem ipsum dolor sit amet consectetur.</p>
+                <p>Sed do eiusmod tempor incididunt ut labore.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

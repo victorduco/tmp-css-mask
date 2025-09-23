@@ -1,0 +1,192 @@
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #000;
+    color: white;
+}
+
+.container {
+    min-height: 200vh;
+    position: relative;
+}
+
+/* Базовый класс для всех фоновых слоев */
+.background-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 0;
+
+    /* СТАТИЧНАЯ фоновая картинка для всех слоев */
+    background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* ВАЖНО: фон статичен, анимируются только маски */
+}
+
+/* Слой 1: Размытие + вращающийся круг */
+.layer1 {
+    filter: url(#blur);
+    -webkit-filter: blur(3px);
+    mask: url(#mask1);
+    -webkit-mask: url(#mask1);
+    z-index: 1;
+}
+
+/* Слой 2: Яркость + масштабирующийся квадрат */
+.layer2 {
+    filter: url(#brightness) brightness(1.5);
+    -webkit-filter: brightness(1.5);
+    mask: url(#mask2);
+    -webkit-mask: url(#mask2);
+    z-index: 2;
+}
+
+/* Слой 3: Сепия + движущийся круг */
+.layer3 {
+    filter: url(#sepia) sepia(1);
+    -webkit-filter: sepia(1);
+    mask: url(#mask3);
+    -webkit-mask: url(#mask3);
+    z-index: 3;
+}
+
+/* Слой 4: Насыщенность + пульсирующий круг */
+.layer4 {
+    filter: url(#saturate) saturate(2);
+    -webkit-filter: saturate(2);
+    mask: url(#mask4);
+    -webkit-mask: url(#mask4);
+    z-index: 4;
+}
+
+/* Слой 5: Контраст + комбинированная анимация */
+.layer5 {
+    filter: url(#contrast) contrast(1.5);
+    -webkit-filter: contrast(1.5);
+    mask: url(#mask5);
+    -webkit-mask: url(#mask5);
+    z-index: 5;
+}
+
+/* Слой 6: Поворот цвета + вращающийся прямоугольник */
+.layer6 {
+    filter: url(#hueRotate) hue-rotate(180deg);
+    -webkit-filter: hue-rotate(180deg);
+    mask: url(#mask6);
+    -webkit-mask: url(#mask6);
+    z-index: 6;
+}
+
+/* Контент */
+.content {
+    position: relative;
+    z-index: 10;
+    padding: 2rem;
+    margin-top: 100vh;
+    min-height: 100vh;
+}
+
+.content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.content p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.content ul {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding-left: 2rem;
+}
+
+.content li {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #ddd;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.scroll-content {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    backdrop-filter: blur(5px);
+}
+
+.scroll-content h2 {
+    color: #ffd700;
+    margin-bottom: 1rem;
+}
+
+.scroll-content p {
+    color: #ddd;
+    margin-bottom: 1rem;
+}
+
+/* Диагностика для браузеров без поддержки SVG фильтров/масок */
+@supports not (filter: url('#test')) {
+    .background-layer {
+        opacity: 0.8;
+    }
+
+    .content::before {
+        content: "⚠️ SVG фильтры не поддерживаются в этом браузере";
+        display: block;
+        background: #ff6b6b;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .content {
+        padding: 1rem;
+    }
+
+    .content h1 {
+        font-size: 2rem;
+    }
+
+    .content p {
+        font-size: 1rem;
+    }
+
+    .scroll-content {
+        padding: 1rem;
+    }
+
+    .background-layer {
+        transform: scale(1.1);
+    }
+}
