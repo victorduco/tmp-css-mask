@@ -25,10 +25,6 @@ body {
 .center-block {
   position: absolute;
   background-color: black;
-  background-image: url("tst-bg.png");
-  background-repeat: no-repeat;
-  background-clip: border-box;
-  background-origin: border-box;
   border: 3px solid rgb(255, 0, 0);
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -50,16 +46,8 @@ body {
   transform: rotate(var(--bg-rotation, 0deg));
   transform-origin: center;
   pointer-events: none;
-  opacity: 0;
-  z-index: 1;
-}
-
-.center-block.rotate-2d::before {
   opacity: 1;
-}
-
-.center-block.rotate-2d {
-  background-image: none;
+  z-index: 1;
 }
 
 .scroll-content {
@@ -129,6 +117,12 @@ body {
   outline: none;
   border-color: #00ff88;
   background: rgba(255, 255, 255, 0.2);
+}
+
+.control-group input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .perspective-container {

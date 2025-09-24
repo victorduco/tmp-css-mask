@@ -97,11 +97,15 @@
             <h3>Background Controls:</h3>
             <div class="control-group">
                 <label>positionX:</label>
-                <input type="number" v-model="background.positionX" @input="updateBackground"> px
+                <input type="number" v-model="pseudoBg.positionX" @input="updatePseudoBackground"> px
             </div>
             <div class="control-group">
                 <label>positionY:</label>
-                <input type="number" v-model="background.positionY" @input="updateBackground"> px
+                <input type="number" v-model="pseudoBg.positionY" @input="updatePseudoBackground"> px
+            </div>
+            <div class="control-group">
+                <label>rotation:</label>
+                <input type="number" v-model="pseudoBg.rotation" @input="updatePseudoBackground"> deg
             </div>
             <div class="control-group">
                 <label>size:</label>
@@ -169,6 +173,11 @@
                         sizeX: '100vw',
                         sizeY: '100vh'
                     },
+                    pseudoBg: {
+                        positionX: 0,
+                        positionY: 0,
+                        rotation: 0
+                    },
                     ui: {
                         opacity50: false
                     },
@@ -209,8 +218,10 @@
                                scale(${this.transforms.scale})
                                skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`,
                         transformStyle: 'preserve-3d',
-                        backgroundPosition: this.background.positionX === 0 && this.background.positionY === 0 ? 'center' : `${this.background.positionX}px ${this.background.positionY}px`,
-                        backgroundSize: bgSize,
+                        '--bg-size': bgSize,
+                        '--bg-pos-x': `${this.pseudoBg.positionX}px`,
+                        '--bg-pos-y': `${this.pseudoBg.positionY}px`,
+                        '--bg-rotation': `${this.pseudoBg.rotation}deg`,
                         cursor: this.isDragging ? 'grabbing' : 'grab',
                         opacity: this.ui.opacity50 ? 0.5 : 1
                     }
@@ -219,12 +230,17 @@
             methods: {
                 updateTransform() {
                     // Реактивность Vue автоматически обновит стиль
+                    this.syncBackground();
                 },
                 updateBackground() {
                     // Реактивность Vue автоматически обновит стиль
                 },
+                updatePseudoBackground() {
+                    // Реактивность Vue автоматически обновит стиль через transformStyle
+                },
                 updateElement() {
                     // Реактивность Vue автоматически обновит стиль
+                    this.syncBackground();
                 },
                 startDrag(e) {
                     this.isDragging = true;
@@ -265,42 +281,25 @@
                     const visualLeft = this.element.left + this.transforms.translateX - centerOffsetX;
                     const visualTop = this.element.top + this.transforms.translateY - centerOffsetY;
 
-                    // Для 2D rotation используем псевдоэлемент с компенсацией поворота
-                    if (this.rotateMode === '2d' && this.transforms.rotateZ !== 0) {
-                        this.$nextTick(() => {
-                            const element = this.$refs.draggable;
-                            if (element) {
-                                // Добавляем класс для активации псевдоэлемента
-                                element.classList.add('rotate-2d');
+                    // Устанавливаем параметры псевдоэлемента
+                    const bgSize = `${1920/scale}px ${1080/scale}px`;
+                    const bgPosX = -(visualLeft + scrollX) / scale;
+                    const bgPosY = -(visualTop + scrollY) / scale;
 
-                                // Устанавливаем параметры псевдоэлемента
-                                const bgSize = `${1920/scale}px ${1080/scale}px`;
-                                const bgPosX = -(visualLeft + scrollX) / scale;
-                                const bgPosY = -(visualTop + scrollY) / scale;
+                    // Компенсируем смещение из-за увеличенного размера псевдоэлемента
+                    const offsetX = this.element.width / 2;
+                    const offsetY = this.element.height / 2;
 
-                                // Компенсируем смещение из-за увеличенного размера псевдоэлемента
-                                const offsetX = this.element.width / 2;
-                                const offsetY = this.element.height / 2;
+                    // Обновляем данные для псевдоэлемента
+                    this.background.size = bgSize;
+                    this.pseudoBg.positionX = bgPosX + offsetX;
+                    this.pseudoBg.positionY = bgPosY + offsetY;
 
-                                element.style.setProperty('--bg-size', bgSize);
-                                element.style.setProperty('--bg-pos-x', `${bgPosX + offsetX}px`);
-                                element.style.setProperty('--bg-pos-y', `${bgPosY + offsetY}px`);
-                                element.style.setProperty('--bg-rotation', `${-this.transforms.rotateZ}deg`);
-                            }
-                        });
+                    // Автоматическая компенсация поворота для 2D режима
+                    if (this.rotateMode === '2d') {
+                        this.pseudoBg.rotation = -this.transforms.rotateZ;
                     } else {
-                        // Для 3D режима или без поворота - обычная логика
-                        this.background.positionX = -(visualLeft + scrollX) / scale;
-                        this.background.positionY = -(visualTop + scrollY) / scale;
-                        this.background.size = `${1920/scale}px ${1080/scale}px`;
-
-                        // Убираем псевдоэлемент
-                        this.$nextTick(() => {
-                            const element = this.$refs.draggable;
-                            if (element) {
-                                element.classList.remove('rotate-2d');
-                            }
-                        });
+                        this.pseudoBg.rotation = 0;
                     }
                 }
             }
