@@ -16,7 +16,7 @@ body {
   width: 100vw;
   height: 100vh;
   background-image: url("https://picsum.photos/1920/1080");
-  background-size: 100vw 100vh;
+  background-size: 1920px 1080px;
   background-position: 0 0;
   background-repeat: no-repeat;
   z-index: -1;
@@ -27,6 +27,8 @@ body {
   background-color: black;
   background-image: url("https://picsum.photos/1920/1080");
   background-repeat: no-repeat;
+  background-clip: border-box;
+  background-origin: border-box;
   border: 3px solid rgba(255, 255, 255, 0.5);
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);

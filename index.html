@@ -233,9 +233,13 @@
                     document.removeEventListener('mouseup', this.stopDrag);
                 },
                 syncBackground() {
-                    this.background.positionX = -this.element.left;
-                    this.background.positionY = -this.element.top;
-                    // Не меняем size - оставляем выбранный пользователем
+                    // Учитываем скролл страницы
+                    const scrollX = window.scrollX || window.pageXOffset;
+                    const scrollY = window.scrollY || window.pageYOffset;
+
+                    this.background.positionX = -(this.element.left + scrollX);
+                    this.background.positionY = -(this.element.top + scrollY);
+                    this.background.size = '1920px 1080px';
                 }
             }
         }).mount('#app');
