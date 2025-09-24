@@ -38,16 +38,29 @@
                 <input type="number" v-model="transforms.translateZ" @input="updateTransform"> px
             </div>
             <div class="control-group">
-                <label>rotateX:</label>
-                <input type="number" v-model="transforms.rotateX" @input="updateTransform"> deg
+                <label>rotate mode:</label>
+                <select v-model="rotateMode" @change="updateTransform">
+                    <option value="2d">2D</option>
+                    <option value="3d">3D</option>
+                </select>
             </div>
-            <div class="control-group">
-                <label>rotateY:</label>
-                <input type="number" v-model="transforms.rotateY" @input="updateTransform"> deg
-            </div>
-            <div class="control-group">
-                <label>rotateZ:</label>
+            <div v-if="rotateMode === '2d'" class="control-group">
+                <label>rotate:</label>
                 <input type="number" v-model="transforms.rotateZ" @input="updateTransform"> deg
+            </div>
+            <div v-if="rotateMode === '3d'">
+                <div class="control-group">
+                    <label>rotateX:</label>
+                    <input type="number" v-model="transforms.rotateX" @input="updateTransform"> deg
+                </div>
+                <div class="control-group">
+                    <label>rotateY:</label>
+                    <input type="number" v-model="transforms.rotateY" @input="updateTransform"> deg
+                </div>
+                <div class="control-group">
+                    <label>rotateZ:</label>
+                    <input type="number" v-model="transforms.rotateZ" @input="updateTransform"> deg
+                </div>
             </div>
             <div class="control-group">
                 <label>scale:</label>
@@ -159,6 +172,7 @@
                     ui: {
                         opacity50: false
                     },
+                    rotateMode: '3d',
                     element: {
                         top: 100,
                         left: 100,
@@ -183,12 +197,17 @@
                         left: `${this.element.left}px`,
                         width: `${this.element.width}px`,
                         height: `${this.element.height}px`,
-                        transform: `translate3d(${this.transforms.translateX}px, ${this.transforms.translateY}px, ${this.transforms.translateZ}px)
-                                   rotateX(${this.transforms.rotateX}deg)
-                                   rotateY(${this.transforms.rotateY}deg)
-                                   rotateZ(${this.transforms.rotateZ}deg)
-                                   scale(${this.transforms.scale})
-                                   skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`,
+                        transform: this.rotateMode === '2d'
+                            ? `translate(${this.transforms.translateX}px, ${this.transforms.translateY}px)
+                               rotate(${this.transforms.rotateZ}deg)
+                               scale(${this.transforms.scale})
+                               skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`
+                            : `translate3d(${this.transforms.translateX}px, ${this.transforms.translateY}px, ${this.transforms.translateZ}px)
+                               rotateX(${this.transforms.rotateX}deg)
+                               rotateY(${this.transforms.rotateY}deg)
+                               rotateZ(${this.transforms.rotateZ}deg)
+                               scale(${this.transforms.scale})
+                               skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`,
                         transformStyle: 'preserve-3d',
                         backgroundPosition: this.background.positionX === 0 && this.background.positionY === 0 ? 'center' : `${this.background.positionX}px ${this.background.positionY}px`,
                         backgroundSize: bgSize,
@@ -243,8 +262,8 @@
                     const centerOffsetY = (this.element.height * (scale - 1)) / 2;
 
                     // Итоговая визуальная позиция левого верхнего угла
-                    const visualLeft = this.element.left - centerOffsetX;
-                    const visualTop = this.element.top - centerOffsetY;
+                    const visualLeft = this.element.left + this.transforms.translateX - centerOffsetX;
+                    const visualTop = this.element.top + this.transforms.translateY - centerOffsetY;
 
                     this.background.positionX = -(visualLeft + scrollX) / scale;
                     this.background.positionY = -(visualTop + scrollY) / scale;
