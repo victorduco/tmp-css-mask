@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Mask Prototype</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="background-block"></div>
+        <div class="perspective-container" :style="{ perspective: transforms.perspective + 'px' }">
+            <div
+                class="center-block"
+                ref="draggable"
+                :style="transformStyle"
+                @mousedown="startDrag"
+            ></div>
+        </div>
+
+        <div class="transform-info">
+            <h3>Transform Controls:</h3>
+            <div class="control-group">
+                <label>perspective:</label>
+                <input type="number" v-model="transforms.perspective" @input="updateTransform"> px
+            </div>
+            <div class="control-group">
+                <label>translateX:</label>
+                <input type="number" v-model="transforms.translateX" @input="updateTransform"> px
+            </div>
+            <div class="control-group">
+                <label>translateY:</label>
+                <input type="number" v-model="transforms.translateY" @input="updateTransform"> px
+            </div>
+            <div class="control-group">
+                <label>translateZ:</label>
+                <input type="number" v-model="transforms.translateZ" @input="updateTransform"> px
+            </div>
+            <div class="control-group">
+                <label>rotateX:</label>
+                <input type="number" v-model="transforms.rotateX" @input="updateTransform"> deg
+            </div>
+            <div class="control-group">
+                <label>rotateY:</label>
+                <input type="number" v-model="transforms.rotateY" @input="updateTransform"> deg
+            </div>
+            <div class="control-group">
+                <label>rotateZ:</label>
+                <input type="number" v-model="transforms.rotateZ" @input="updateTransform"> deg
+            </div>
+            <div class="control-group">
+                <label>scale:</label>
+                <input type="number" v-model="transforms.scale" step="0.1" @input="updateTransform">
+            </div>
+            <div class="control-group">
+                <label>skewX:</label>
+                <input type="number" v-model="transforms.skewX" @input="updateTransform"> deg
+            </div>
+            <div class="control-group">
+                <label>skewY:</label>
+                <input type="number" v-model="transforms.skewY" @input="updateTransform"> deg
+            </div>
+        </div>
+
+        <div class="background-info">
+            <h3>Element Controls:</h3>
+            <div class="control-group">
+                <label>top:</label>
+                <input type="number" v-model="element.top" @input="updateElement"> px
+            </div>
+            <div class="control-group">
+                <label>left:</label>
+                <input type="number" v-model="element.left" @input="updateElement"> px
+            </div>
+            <div class="control-group">
+                <label>width:</label>
+                <input type="number" v-model="element.width" @input="updateElement"> px
+            </div>
+            <div class="control-group">
+                <label>height:</label>
+                <input type="number" v-model="element.height" @input="updateElement"> px
+            </div>
+            <h3>Background Controls:</h3>
+            <div class="control-group">
+                <label>positionX:</label>
+                <input type="number" v-model="background.positionX" @input="updateBackground"> px
+            </div>
+            <div class="control-group">
+                <label>positionY:</label>
+                <input type="number" v-model="background.positionY" @input="updateBackground"> px
+            </div>
+            <div class="control-group">
+                <label>size:</label>
+                <select v-model="background.size" @change="updateBackground">
+                    <option value="cover">cover</option>
+                    <option value="contain">contain</option>
+                    <option value="auto">auto</option>
+                    <option value="100% 100%">100% 100%</option>
+                    <option value="100vw 100vh">100vw 100vh</option>
+                    <option value="100vw auto">100vw auto</option>
+                    <option value="auto 100vh">auto 100vh</option>
+                    <option value="1920px 1080px">1920px 1080px</option>
+                    <option value="custom">custom</option>
+                </select>
+            </div>
+            <div class="control-group" v-if="background.size === 'custom'">
+                <label>sizeX:</label>
+                <input type="text" v-model="background.sizeX" @input="updateBackground" placeholder="100vw">
+            </div>
+            <div class="control-group" v-if="background.size === 'custom'">
+                <label>sizeY:</label>
+                <input type="text" v-model="background.sizeY" @input="updateBackground" placeholder="100vh">
+            </div>
+            <h3>UI Controls:</h3>
+            <div class="control-group">
+                <label>opacity 50%:</label>
+                <input type="checkbox" v-model="ui.opacity50">
+            </div>
+            <div class="control-group">
+                <button @click="syncBackground" style="padding: 5px 10px; background: #00ff88; border: none; border-radius: 3px; color: black; font-weight: bold; cursor: pointer;">SYNC BG</button>
+            </div>
+        </div>
+
+        <div class="scroll-content">
+            <p>Дополнительный контент для скролла</p>
+            <p>Еще один блок текста</p>
+            <p>И еще немного контента</p>
+            <p>Чтобы можно было скроллить страницу</p>
+            <p>Последний блок контента</p>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    transforms: {
+                        perspective: 1000,
+                        translateX: 0,
+                        translateY: 0,
+                        translateZ: 0,
+                        rotateX: 0,
+                        rotateY: 0,
+                        rotateZ: 0,
+                        scale: 1,
+                        skewX: 0,
+                        skewY: 0
+                    },
+                    background: {
+                        positionX: -100,
+                        positionY: -100,
+                        size: '100vw 100vh',
+                        sizeX: '100vw',
+                        sizeY: '100vh'
+                    },
+                    ui: {
+                        opacity50: false
+                    },
+                    element: {
+                        top: 100,
+                        left: 100,
+                        width: 300,
+                        height: 300
+                    },
+                    isDragging: false,
+                    startX: 0,
+                    startY: 0,
+                    startElementX: 0,
+                    startElementY: 0
+                }
+            },
+            computed: {
+                transformStyle() {
+                    const bgSize = this.background.size === 'custom' ?
+                        `${this.background.sizeX} ${this.background.sizeY}` :
+                        this.background.size;
+
+                    return {
+                        top: `${this.element.top}px`,
+                        left: `${this.element.left}px`,
+                        width: `${this.element.width}px`,
+                        height: `${this.element.height}px`,
+                        transform: `translate3d(${this.transforms.translateX}px, ${this.transforms.translateY}px, ${this.transforms.translateZ}px)
+                                   rotateX(${this.transforms.rotateX}deg)
+                                   rotateY(${this.transforms.rotateY}deg)
+                                   rotateZ(${this.transforms.rotateZ}deg)
+                                   scale(${this.transforms.scale})
+                                   skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`,
+                        transformStyle: 'preserve-3d',
+                        backgroundPosition: this.background.positionX === 0 && this.background.positionY === 0 ? 'center' : `${this.background.positionX}px ${this.background.positionY}px`,
+                        backgroundSize: bgSize,
+                        cursor: this.isDragging ? 'grabbing' : 'grab',
+                        opacity: this.ui.opacity50 ? 0.5 : 1
+                    }
+                }
+            },
+            methods: {
+                updateTransform() {
+                    // Реактивность Vue автоматически обновит стиль
+                },
+                updateBackground() {
+                    // Реактивность Vue автоматически обновит стиль
+                },
+                updateElement() {
+                    // Реактивность Vue автоматически обновит стиль
+                },
+                startDrag(e) {
+                    this.isDragging = true;
+                    this.startX = e.clientX;
+                    this.startY = e.clientY;
+                    this.startElementX = this.element.left;
+                    this.startElementY = this.element.top;
+                    e.preventDefault();
+
+                    document.addEventListener('mousemove', this.onDrag);
+                    document.addEventListener('mouseup', this.stopDrag);
+                },
+                onDrag(e) {
+                    if (!this.isDragging) return;
+
+                    const deltaX = e.clientX - this.startX;
+                    const deltaY = e.clientY - this.startY;
+
+                    this.element.left = this.startElementX + deltaX;
+                    this.element.top = this.startElementY + deltaY;
+                },
+                stopDrag() {
+                    this.isDragging = false;
+                    document.removeEventListener('mousemove', this.onDrag);
+                    document.removeEventListener('mouseup', this.stopDrag);
+                },
+                syncBackground() {
+                    this.background.positionX = -this.element.left;
+                    this.background.positionY = -this.element.top;
+                    // Не меняем size - оставляем выбранный пользователем
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
