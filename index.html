@@ -145,7 +145,7 @@
                         rotateX: 0,
                         rotateY: 0,
                         rotateZ: 0,
-                        scale: 1,
+                        scale: 2,
                         skewX: 0,
                         skewY: 0
                     },
@@ -237,9 +237,18 @@
                     const scrollX = window.scrollX || window.pageXOffset;
                     const scrollY = window.scrollY || window.pageYOffset;
 
-                    this.background.positionX = -(this.element.left + scrollX);
-                    this.background.positionY = -(this.element.top + scrollY);
-                    this.background.size = '1920px 1080px';
+                    // Рассчитываем смещение из-за scale (элемент растет от центра)
+                    const scale = this.transforms.scale;
+                    const centerOffsetX = (this.element.width * (scale - 1)) / 2;
+                    const centerOffsetY = (this.element.height * (scale - 1)) / 2;
+
+                    // Итоговая визуальная позиция левого верхнего угла
+                    const visualLeft = this.element.left - centerOffsetX;
+                    const visualTop = this.element.top - centerOffsetY;
+
+                    this.background.positionX = -(visualLeft + scrollX) / scale;
+                    this.background.positionY = -(visualTop + scrollY) / scale;
+                    this.background.size = `${1920/scale}px ${1080/scale}px`;
                 }
             }
         }).mount('#app');
