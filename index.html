@@ -1,309 +1,420 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CSS Mask Prototype</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div id="app">
-        <div class="background-block"></div>
-        <div class="perspective-container" :style="{ perspective: transforms.perspective + 'px' }">
-            <div
-                class="center-block"
-                ref="draggable"
-                :style="transformStyle"
-                @mousedown="startDrag"
-            ></div>
-        </div>
+      <div class="background-block"></div>
+      <div
+        class="perspective-container"
+        :style="{ perspective: transforms.perspective + 'px' }"
+      >
+        <div
+          class="center-block"
+          ref="draggable"
+          :style="transformStyle"
+          @mousedown="startDrag"
+        ></div>
+      </div>
 
-        <div class="transform-info">
-            <h3>Transform Controls:</h3>
-            <div class="control-group">
-                <label>perspective:</label>
-                <input type="number" v-model="transforms.perspective" @input="updateTransform"> px
-            </div>
-            <div class="control-group">
-                <label>translateX:</label>
-                <input type="number" v-model="transforms.translateX" @input="updateTransform"> px
-            </div>
-            <div class="control-group">
-                <label>translateY:</label>
-                <input type="number" v-model="transforms.translateY" @input="updateTransform"> px
-            </div>
-            <div class="control-group">
-                <label>translateZ:</label>
-                <input type="number" v-model="transforms.translateZ" @input="updateTransform"> px
-            </div>
-            <div class="control-group">
-                <label>rotate mode:</label>
-                <select v-model="rotateMode" @change="updateTransform">
-                    <option value="2d">2D</option>
-                    <option value="3d">3D</option>
-                </select>
-            </div>
-            <div v-if="rotateMode === '2d'" class="control-group">
-                <label>rotate:</label>
-                <input type="number" v-model="transforms.rotateZ" @input="updateTransform"> deg
-            </div>
-            <div v-if="rotateMode === '3d'">
-                <div class="control-group">
-                    <label>rotateX:</label>
-                    <input type="number" v-model="transforms.rotateX" @input="updateTransform"> deg
-                </div>
-                <div class="control-group">
-                    <label>rotateY:</label>
-                    <input type="number" v-model="transforms.rotateY" @input="updateTransform"> deg
-                </div>
-                <div class="control-group">
-                    <label>rotateZ:</label>
-                    <input type="number" v-model="transforms.rotateZ" @input="updateTransform"> deg
-                </div>
-            </div>
-            <div class="control-group">
-                <label>scale:</label>
-                <input type="number" v-model="transforms.scale" step="0.1" @input="updateTransform">
-            </div>
-            <div class="control-group">
-                <label>skewX:</label>
-                <input type="number" v-model="transforms.skewX" @input="updateTransform"> deg
-            </div>
-            <div class="control-group">
-                <label>skewY:</label>
-                <input type="number" v-model="transforms.skewY" @input="updateTransform"> deg
-            </div>
+      <div class="transform-info">
+        <h3>Transform Controls:</h3>
+        <div class="control-group">
+          <label>perspective:</label>
+          <input
+            type="number"
+            v-model="transforms.perspective"
+            @input="updateTransform"
+          />
+          px
         </div>
+        <div class="control-group">
+          <label>translateX:</label>
+          <input
+            type="number"
+            v-model="transforms.translateX"
+            @input="updateTransform"
+          />
+          px
+        </div>
+        <div class="control-group">
+          <label>translateY:</label>
+          <input
+            type="number"
+            v-model="transforms.translateY"
+            @input="updateTransform"
+          />
+          px
+        </div>
+        <div class="control-group">
+          <label>translateZ:</label>
+          <input
+            type="number"
+            v-model="transforms.translateZ"
+            @input="updateTransform"
+          />
+          px
+        </div>
+        <div class="control-group">
+          <label>rotate mode:</label>
+          <select v-model="rotateMode" @change="updateTransform">
+            <option value="2d">2D</option>
+            <option value="3d">3D</option>
+          </select>
+        </div>
+        <div v-if="rotateMode === '2d'" class="control-group">
+          <label>rotate:</label>
+          <input
+            type="number"
+            v-model="transforms.rotateZ"
+            @input="updateTransform"
+          />
+          deg
+        </div>
+        <div v-if="rotateMode === '3d'">
+          <div class="control-group">
+            <label>rotateX:</label>
+            <input
+              type="number"
+              v-model="transforms.rotateX"
+              @input="updateTransform"
+            />
+            deg
+          </div>
+          <div class="control-group">
+            <label>rotateY:</label>
+            <input
+              type="number"
+              v-model="transforms.rotateY"
+              @input="updateTransform"
+            />
+            deg
+          </div>
+          <div class="control-group">
+            <label>rotateZ:</label>
+            <input
+              type="number"
+              v-model="transforms.rotateZ"
+              @input="updateTransform"
+            />
+            deg
+          </div>
+        </div>
+        <div class="control-group">
+          <label>scale:</label>
+          <input
+            type="number"
+            v-model="transforms.scale"
+            step="0.1"
+            @input="updateTransform"
+          />
+        </div>
+        <div class="control-group">
+          <label>skewX:</label>
+          <input
+            type="number"
+            v-model="transforms.skewX"
+            @input="updateTransform"
+          />
+          deg
+        </div>
+        <div class="control-group">
+          <label>skewY:</label>
+          <input
+            type="number"
+            v-model="transforms.skewY"
+            @input="updateTransform"
+          />
+          deg
+        </div>
+      </div>
 
-        <div class="background-info">
-            <h3>Element Controls:</h3>
-            <div class="control-group">
-                <label>top:</label>
-                <input type="number" v-model="element.top" @input="updateElement"> px
-            </div>
-            <div class="control-group">
-                <label>left:</label>
-                <input type="number" v-model="element.left" @input="updateElement"> px
-            </div>
-            <div class="control-group">
-                <label>width:</label>
-                <input type="number" v-model="element.width" @input="updateElement"> px
-            </div>
-            <div class="control-group">
-                <label>height:</label>
-                <input type="number" v-model="element.height" @input="updateElement"> px
-            </div>
-            <h3>Background Controls:</h3>
-            <div class="control-group">
-                <label>positionX:</label>
-                <input type="number" v-model="pseudoBg.positionX" @input="updatePseudoBackground"> px
-            </div>
-            <div class="control-group">
-                <label>positionY:</label>
-                <input type="number" v-model="pseudoBg.positionY" @input="updatePseudoBackground"> px
-            </div>
-            <div class="control-group">
-                <label>rotation:</label>
-                <input type="number" v-model="pseudoBg.rotation" @input="updatePseudoBackground"> deg
-            </div>
-            <div class="control-group">
-                <label>size:</label>
-                <select v-model="background.size" @change="updateBackground">
-                    <option value="cover">cover</option>
-                    <option value="contain">contain</option>
-                    <option value="auto">auto</option>
-                    <option value="100% 100%">100% 100%</option>
-                    <option value="100vw 100vh">100vw 100vh</option>
-                    <option value="100vw auto">100vw auto</option>
-                    <option value="auto 100vh">auto 100vh</option>
-                    <option value="1920px 1080px">1920px 1080px</option>
-                    <option value="custom">custom</option>
-                </select>
-            </div>
-            <div class="control-group" v-if="background.size === 'custom'">
-                <label>sizeX:</label>
-                <input type="text" v-model="background.sizeX" @input="updateBackground" placeholder="100vw">
-            </div>
-            <div class="control-group" v-if="background.size === 'custom'">
-                <label>sizeY:</label>
-                <input type="text" v-model="background.sizeY" @input="updateBackground" placeholder="100vh">
-            </div>
-            <h3>UI Controls:</h3>
-            <div class="control-group">
-                <label>opacity 50%:</label>
-                <input type="checkbox" v-model="ui.opacity50">
-            </div>
-            <div class="control-group">
-                <button @click="syncBackground" style="padding: 5px 10px; background: #00ff88; border: none; border-radius: 3px; color: black; font-weight: bold; cursor: pointer;">SYNC BG</button>
-            </div>
+      <div class="background-info">
+        <h3>Element Controls:</h3>
+        <div class="control-group">
+          <label>top:</label>
+          <input type="number" v-model="element.top" @input="updateElement" />
+          px
         </div>
+        <div class="control-group">
+          <label>left:</label>
+          <input type="number" v-model="element.left" @input="updateElement" />
+          px
+        </div>
+        <div class="control-group">
+          <label>width:</label>
+          <input type="number" v-model="element.width" @input="updateElement" />
+          px
+        </div>
+        <div class="control-group">
+          <label>height:</label>
+          <input
+            type="number"
+            v-model="element.height"
+            @input="updateElement"
+          />
+          px
+        </div>
+        <h3>Background Controls:</h3>
+        <div class="control-group">
+          <label>positionX:</label>
+          <input
+            type="number"
+            v-model="pseudoBg.positionX"
+            @input="updatePseudoBackground"
+          />
+          px
+        </div>
+        <div class="control-group">
+          <label>positionY:</label>
+          <input
+            type="number"
+            v-model="pseudoBg.positionY"
+            @input="updatePseudoBackground"
+          />
+          px
+        </div>
+        <div class="control-group">
+          <label>rotation:</label>
+          <input
+            type="number"
+            v-model="pseudoBg.rotation"
+            @input="updatePseudoBackground"
+          />
+          deg
+        </div>
+        <div class="control-group">
+          <label>size:</label>
+          <select v-model="background.size" @change="updateBackground">
+            <option value="cover">cover</option>
+            <option value="contain">contain</option>
+            <option value="auto">auto</option>
+            <option value="100% 100%">100% 100%</option>
+            <option value="100vw 100vh">100vw 100vh</option>
+            <option value="100vw auto">100vw auto</option>
+            <option value="auto 100vh">auto 100vh</option>
+            <option value="1920px 1080px">1920px 1080px</option>
+            <option value="custom">custom</option>
+          </select>
+        </div>
+        <div class="control-group" v-if="background.size === 'custom'">
+          <label>sizeX:</label>
+          <input
+            type="text"
+            v-model="background.sizeX"
+            @input="updateBackground"
+            placeholder="100vw"
+          />
+        </div>
+        <div class="control-group" v-if="background.size === 'custom'">
+          <label>sizeY:</label>
+          <input
+            type="text"
+            v-model="background.sizeY"
+            @input="updateBackground"
+            placeholder="100vh"
+          />
+        </div>
+        <h3>UI Controls:</h3>
+        <div class="control-group">
+          <label>opacity 50%:</label>
+          <input type="checkbox" v-model="ui.opacity50" />
+        </div>
+        <div class="control-group">
+          <button
+            @click="syncBackground"
+            style="
+              padding: 5px 10px;
+              background: #00ff88;
+              border: none;
+              border-radius: 3px;
+              color: black;
+              font-weight: bold;
+              cursor: pointer;
+            "
+          >
+            SYNC BG
+          </button>
+        </div>
+      </div>
 
-        <div class="scroll-content">
-            <p>Дополнительный контент для скролла</p>
-            <p>Еще один блок текста</p>
-            <p>И еще немного контента</p>
-            <p>Чтобы можно было скроллить страницу</p>
-            <p>Последний блок контента</p>
-        </div>
+      <div class="scroll-content">
+        <p>Дополнительный контент для скролла</p>
+        <p>Еще один блок текста</p>
+        <p>И еще немного контента</p>
+        <p>Чтобы можно было скроллить страницу</p>
+        <p>Последний блок контента</p>
+      </div>
     </div>
 
     <script>
-        const { createApp } = Vue;
+      const { createApp } = Vue;
 
-        createApp({
-            data() {
-                return {
-                    transforms: {
-                        perspective: 1000,
-                        translateX: 0,
-                        translateY: 0,
-                        translateZ: 0,
-                        rotateX: 0,
-                        rotateY: 0,
-                        rotateZ: 0,
-                        scale: 2,
-                        skewX: 0,
-                        skewY: 0
-                    },
-                    background: {
-                        positionX: -100,
-                        positionY: -100,
-                        size: '100vw 100vh',
-                        sizeX: '100vw',
-                        sizeY: '100vh'
-                    },
-                    pseudoBg: {
-                        positionX: 0,
-                        positionY: 0,
-                        rotation: 0
-                    },
-                    ui: {
-                        opacity50: false
-                    },
-                    rotateMode: '3d',
-                    element: {
-                        top: 100,
-                        left: 100,
-                        width: 300,
-                        height: 300
-                    },
-                    isDragging: false,
-                    startX: 0,
-                    startY: 0,
-                    startElementX: 0,
-                    startElementY: 0
-                }
+      createApp({
+        data() {
+          return {
+            transforms: {
+              perspective: 1000,
+              translateX: 0,
+              translateY: 0,
+              translateZ: 0,
+              rotateX: 0,
+              rotateY: 0,
+              rotateZ: 0,
+              scale: 2,
+              skewX: 0,
+              skewY: 0,
             },
-            computed: {
-                transformStyle() {
-                    const bgSize = this.background.size === 'custom' ?
-                        `${this.background.sizeX} ${this.background.sizeY}` :
-                        this.background.size;
+            background: {
+              positionX: -100,
+              positionY: -100,
+              size: "100vw auto",
+              sizeX: "100vw",
+              sizeY: "100vh",
+            },
+            pseudoBg: {
+              positionX: 0,
+              positionY: 0,
+              rotation: 0,
+            },
+            ui: {
+              opacity50: false,
+            },
+            rotateMode: "3d",
+            element: {
+              top: 100,
+              left: 100,
+              width: 300,
+              height: 300,
+            },
+            isDragging: false,
+            startX: 0,
+            startY: 0,
+            startElementX: 0,
+            startElementY: 0,
+          };
+        },
+        computed: {
+          transformStyle() {
+            const bgSize =
+              this.background.size === "custom"
+                ? `${this.background.sizeX} ${this.background.sizeY}`
+                : this.background.size;
 
-                    return {
-                        top: `${this.element.top}px`,
-                        left: `${this.element.left}px`,
-                        width: `${this.element.width}px`,
-                        height: `${this.element.height}px`,
-                        transform: this.rotateMode === '2d'
-                            ? `translate(${this.transforms.translateX}px, ${this.transforms.translateY}px)
+            return {
+              top: `${this.element.top}px`,
+              left: `${this.element.left}px`,
+              width: `${this.element.width}px`,
+              height: `${this.element.height}px`,
+              transform:
+                this.rotateMode === "2d"
+                  ? `translate(${this.transforms.translateX}px, ${this.transforms.translateY}px)
                                rotate(${this.transforms.rotateZ}deg)
                                scale(${this.transforms.scale})
                                skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`
-                            : `translate3d(${this.transforms.translateX}px, ${this.transforms.translateY}px, ${this.transforms.translateZ}px)
+                  : `translate3d(${this.transforms.translateX}px, ${this.transforms.translateY}px, ${this.transforms.translateZ}px)
                                rotateX(${this.transforms.rotateX}deg)
                                rotateY(${this.transforms.rotateY}deg)
                                rotateZ(${this.transforms.rotateZ}deg)
                                scale(${this.transforms.scale})
                                skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`,
-                        transformStyle: 'preserve-3d',
-                        '--bg-size': bgSize,
-                        '--bg-pos-x': `${this.pseudoBg.positionX}px`,
-                        '--bg-pos-y': `${this.pseudoBg.positionY}px`,
-                        '--bg-rotation': `${this.pseudoBg.rotation}deg`,
-                        cursor: this.isDragging ? 'grabbing' : 'grab',
-                        opacity: this.ui.opacity50 ? 0.5 : 1
-                    }
-                }
-            },
-            methods: {
-                updateTransform() {
-                    // Реактивность Vue автоматически обновит стиль
-                    this.syncBackground();
-                },
-                updateBackground() {
-                    // Реактивность Vue автоматически обновит стиль
-                },
-                updatePseudoBackground() {
-                    // Реактивность Vue автоматически обновит стиль через transformStyle
-                },
-                updateElement() {
-                    // Реактивность Vue автоматически обновит стиль
-                    this.syncBackground();
-                },
-                startDrag(e) {
-                    this.isDragging = true;
-                    this.startX = e.clientX;
-                    this.startY = e.clientY;
-                    this.startElementX = this.element.left;
-                    this.startElementY = this.element.top;
-                    e.preventDefault();
+              transformStyle: "preserve-3d",
+              "--bg-size": bgSize,
+              "--bg-pos-x": `${this.pseudoBg.positionX}px`,
+              "--bg-pos-y": `${this.pseudoBg.positionY}px`,
+              "--bg-rotation": `${this.pseudoBg.rotation}deg`,
+              cursor: this.isDragging ? "grabbing" : "grab",
+              opacity: this.ui.opacity50 ? 0.5 : 1,
+            };
+          },
+        },
+        methods: {
+          updateTransform() {
+            // Реактивность Vue автоматически обновит стиль
+            this.syncBackground();
+          },
+          updateBackground() {
+            // Реактивность Vue автоматически обновит стиль
+          },
+          updatePseudoBackground() {
+            // Реактивность Vue автоматически обновит стиль через transformStyle
+          },
+          updateElement() {
+            // Реактивность Vue автоматически обновит стиль
+            this.syncBackground();
+          },
+          startDrag(e) {
+            this.isDragging = true;
+            this.startX = e.clientX;
+            this.startY = e.clientY;
+            this.startElementX = this.element.left;
+            this.startElementY = this.element.top;
+            e.preventDefault();
 
-                    document.addEventListener('mousemove', this.onDrag);
-                    document.addEventListener('mouseup', this.stopDrag);
-                },
-                onDrag(e) {
-                    if (!this.isDragging) return;
+            document.addEventListener("mousemove", this.onDrag);
+            document.addEventListener("mouseup", this.stopDrag);
+          },
+          onDrag(e) {
+            if (!this.isDragging) return;
 
-                    const deltaX = e.clientX - this.startX;
-                    const deltaY = e.clientY - this.startY;
+            const deltaX = e.clientX - this.startX;
+            const deltaY = e.clientY - this.startY;
 
-                    this.element.left = this.startElementX + deltaX;
-                    this.element.top = this.startElementY + deltaY;
-                },
-                stopDrag() {
-                    this.isDragging = false;
-                    document.removeEventListener('mousemove', this.onDrag);
-                    document.removeEventListener('mouseup', this.stopDrag);
-                },
-                syncBackground() {
-                    // Учитываем скролл страницы
-                    const scrollX = window.scrollX || window.pageXOffset;
-                    const scrollY = window.scrollY || window.pageYOffset;
+            this.element.left = this.startElementX + deltaX;
+            this.element.top = this.startElementY + deltaY;
+          },
+          stopDrag() {
+            this.isDragging = false;
+            document.removeEventListener("mousemove", this.onDrag);
+            document.removeEventListener("mouseup", this.stopDrag);
+          },
+          syncBackground() {
+            // Учитываем скролл страницы
+            const scrollX = window.scrollX || window.pageXOffset;
+            const scrollY = window.scrollY || window.pageYOffset;
 
-                    // Рассчитываем смещение из-за scale (элемент растет от центра)
-                    const scale = this.transforms.scale;
-                    const centerOffsetX = (this.element.width * (scale - 1)) / 2;
-                    const centerOffsetY = (this.element.height * (scale - 1)) / 2;
+            // Получаем точные координаты элемента из апи
+            const rect = this.$refs.draggable.getBoundingClientRect();
+            const visualLeft = rect.left + scrollX;
+            const visualTop = rect.top + scrollY;
 
-                    // Итоговая визуальная позиция левого верхнего угла
-                    const visualLeft = this.element.left + this.transforms.translateX - centerOffsetX;
-                    const visualTop = this.element.top + this.transforms.translateY - centerOffsetY;
+            // Получаем ширину бордера из CSS (из учета что одинаковая)
+            const style = getComputedStyle(this.$refs.draggable);
+            const bw = parseFloat(style.borderWidth);
+            const s = this.transforms.scale || 1;
+            const w0 = this.element.width + 2 * bw;
+            const h0 = this.element.height + 2 * bw;
 
-                    // Устанавливаем параметры псевдоэлемента
-                    const bgSize = `${1920/scale}px ${1080/scale}px`;
-                    const bgPosX = -(visualLeft + scrollX) / scale;
-                    const bgPosY = -(visualTop + scrollY) / scale;
+            let bgPosX = -(visualLeft / s) + w0 / 2 - 2 * bw;
+            let bgPosY = -(visualTop / s) + h0 / 2 - 2 * bw;
+            // Один borderWidth из-за увеличения размера элемента с border и второй из-за смещения псевдоэлемента
+            console.log("visualLeft:", visualLeft, "visualTop:", visualTop);
+            console.log("rect:", rect);
+            console.log("borderWidth:", bw);
+            console.log("w0:", w0, "h0:", h0);
+            console.log("bgPosX:", bgPosX, "bgPosY:", bgPosY);
 
-                    // Компенсируем смещение из-за увеличенного размера псевдоэлемента
-                    const offsetX = this.element.width / 2;
-                    const offsetY = this.element.height / 2;
+            // Обновляем данные для псевдоэлемента
+            console.log("scale:", s);
+            console.log(`${(100 / s).toFixed(1)}vw auto`);
+            this.background.size = `${(100 / s).toFixed(1)}vw auto`;
+            this.pseudoBg.positionX = bgPosX;
+            this.pseudoBg.positionY = bgPosY;
 
-                    // Обновляем данные для псевдоэлемента
-                    this.background.size = bgSize;
-                    this.pseudoBg.positionX = bgPosX + offsetX;
-                    this.pseudoBg.positionY = bgPosY + offsetY;
-
-                    // Автоматическая компенсация поворота для 2D режима
-                    if (this.rotateMode === '2d') {
-                        this.pseudoBg.rotation = -this.transforms.rotateZ;
-                    } else {
-                        this.pseudoBg.rotation = 0;
-                    }
-                }
+            // Автоматическая компенсация поворота для 2D режима
+            if (this.rotateMode === "2d") {
+              this.pseudoBg.rotation = -this.transforms.rotateZ;
+            } else {
+              this.pseudoBg.rotation = 0;
             }
-        }).mount('#app');
+          },
+        },
+      }).mount("#app");
     </script>
-</body>
+  </body>
 </html>
