@@ -265,9 +265,43 @@
                     const visualLeft = this.element.left + this.transforms.translateX - centerOffsetX;
                     const visualTop = this.element.top + this.transforms.translateY - centerOffsetY;
 
-                    this.background.positionX = -(visualLeft + scrollX) / scale;
-                    this.background.positionY = -(visualTop + scrollY) / scale;
-                    this.background.size = `${1920/scale}px ${1080/scale}px`;
+                    // Для 2D rotation используем псевдоэлемент с компенсацией поворота
+                    if (this.rotateMode === '2d' && this.transforms.rotateZ !== 0) {
+                        this.$nextTick(() => {
+                            const element = this.$refs.draggable;
+                            if (element) {
+                                // Добавляем класс для активации псевдоэлемента
+                                element.classList.add('rotate-2d');
+
+                                // Устанавливаем параметры псевдоэлемента
+                                const bgSize = `${1920/scale}px ${1080/scale}px`;
+                                const bgPosX = -(visualLeft + scrollX) / scale;
+                                const bgPosY = -(visualTop + scrollY) / scale;
+
+                                // Компенсируем смещение из-за увеличенного размера псевдоэлемента
+                                const offsetX = this.element.width / 2;
+                                const offsetY = this.element.height / 2;
+
+                                element.style.setProperty('--bg-size', bgSize);
+                                element.style.setProperty('--bg-pos-x', `${bgPosX + offsetX}px`);
+                                element.style.setProperty('--bg-pos-y', `${bgPosY + offsetY}px`);
+                                element.style.setProperty('--bg-rotation', `${-this.transforms.rotateZ}deg`);
+                            }
+                        });
+                    } else {
+                        // Для 3D режима или без поворота - обычная логика
+                        this.background.positionX = -(visualLeft + scrollX) / scale;
+                        this.background.positionY = -(visualTop + scrollY) / scale;
+                        this.background.size = `${1920/scale}px ${1080/scale}px`;
+
+                        // Убираем псевдоэлемент
+                        this.$nextTick(() => {
+                            const element = this.$refs.draggable;
+                            if (element) {
+                                element.classList.remove('rotate-2d');
+                            }
+                        });
+                    }
                 }
             }
         }).mount('#app');

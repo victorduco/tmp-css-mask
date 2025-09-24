@@ -33,6 +33,33 @@ body {
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   z-index: 1;
+  overflow: hidden;
+}
+
+.center-block::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("tst-bg.png");
+  background-size: var(--bg-size, 1920px 1080px);
+  background-position: var(--bg-pos-x, 0px) var(--bg-pos-y, 0px);
+  background-repeat: no-repeat;
+  transform: rotate(var(--bg-rotation, 0deg));
+  transform-origin: center;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+}
+
+.center-block.rotate-2d::before {
+  opacity: 1;
+}
+
+.center-block.rotate-2d {
+  background-image: none;
 }
 
 .scroll-content {
