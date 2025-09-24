@@ -173,7 +173,6 @@
                         opacity50: false
                     },
                     rotateMode: '3d',
-                    backgroundRotate: 0,
                     element: {
                         top: 100,
                         left: 100,
@@ -210,10 +209,8 @@
                                scale(${this.transforms.scale})
                                skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`,
                         transformStyle: 'preserve-3d',
-                        '--bg-position-x': this.background.positionX + 'px',
-                        '--bg-position-y': this.background.positionY + 'px',
-                        '--bg-size': bgSize,
-                        '--bg-rotate': this.backgroundRotate + 'deg',
+                        backgroundPosition: this.background.positionX === 0 && this.background.positionY === 0 ? 'center' : `${this.background.positionX}px ${this.background.positionY}px`,
+                        backgroundSize: bgSize,
                         cursor: this.isDragging ? 'grabbing' : 'grab',
                         opacity: this.ui.opacity50 ? 0.5 : 1
                     }
@@ -265,20 +262,11 @@
                     const centerOffsetY = (this.element.height * (scale - 1)) / 2;
 
                     // Итоговая визуальная позиция левого верхнего угла
-                    let visualLeft = this.element.left + this.transforms.translateX - centerOffsetX;
-                    let visualTop = this.element.top + this.transforms.translateY - centerOffsetY;
+                    const visualLeft = this.element.left + this.transforms.translateX - centerOffsetX;
+                    const visualTop = this.element.top + this.transforms.translateY - centerOffsetY;
 
-                    // В 2D режиме ротации нужно компенсировать поворот внутри элемента
-                    this.backgroundRotate = (this.rotateMode === '2d' && this.transforms.rotateZ !== 0)
-                        ? -this.transforms.rotateZ
-                        : 0;
-
-                    // Псевдоэлемент размером 200% сдвинут на -50% от родителя
-                    // Значит background нужно сдвинуть на +100% размера родителя
-                    const pseudoOffset = this.element.width;
-
-                    this.background.positionX = (-(visualLeft + scrollX) + pseudoOffset) / scale;
-                    this.background.positionY = (-(visualTop + scrollY) + pseudoOffset) / scale;
+                    this.background.positionX = -(visualLeft + scrollX) / scale;
+                    this.background.positionY = -(visualTop + scrollY) / scale;
                     this.background.size = `${1920/scale}px ${1080/scale}px`;
                 }
             }

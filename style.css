@@ -25,28 +25,14 @@ body {
 .center-block {
   position: absolute;
   background-color: black;
-  border: 3px solid rgb(255, 0, 0);
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  z-index: 1;
-  overflow: hidden;
-}
-
-.center-block::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
   background-image: url("tst-bg.png");
   background-repeat: no-repeat;
   background-clip: border-box;
   background-origin: border-box;
-  background-position: var(--bg-position-x, 0px) var(--bg-position-y, 0px);
-  background-size: var(--bg-size, auto);
-  transform: rotate(var(--bg-rotate, 0deg));
-  transform-origin: center center;
+  border: 3px solid rgb(255, 0, 0);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
 .scroll-content {
