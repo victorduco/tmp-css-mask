@@ -253,142 +253,109 @@
     </div>
 
     <script>
-      const { createApp } = Vue;
+      const { createApp, reactive, computed, ref } = Vue;
 
       createApp({
-        data() {
-          return {
-            transforms: {
-              perspective: 1000,
-              translateX: 0,
-              translateY: 0,
-              translateZ: 0,
-              rotateX: 0,
-              rotateY: 0,
-              rotateZ: 0,
-              scale: 2,
-              skewX: 0,
-              skewY: 0,
-            },
-            background: {
-              positionX: -100,
-              positionY: -100,
-              size: "100vw auto",
-              sizeX: "100vw",
-              sizeY: "100vh",
-            },
-            pseudoBg: {
-              positionX: 0,
-              positionY: 0,
-              rotation: 0,
-            },
-            ui: {
-              opacity50: false,
-            },
-            rotateMode: "3d",
-            element: {
-              top: 100,
-              left: 100,
-              width: 300,
-              height: 300,
-            },
-            isDragging: false,
-            startX: 0,
-            startY: 0,
-            startElementX: 0,
-            startElementY: 0,
-          };
-        },
-        computed: {
-          transformStyle() {
+        setup() {
+          // Reactive data
+          const transforms = reactive({
+            perspective: 1000,
+            translateX: 0,
+            translateY: 0,
+            translateZ: 0,
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            scale: 2,
+            skewX: 0,
+            skewY: 0,
+          });
+
+          const background = reactive({
+            positionX: -100,
+            positionY: -100,
+            size: "100vw auto",
+            sizeX: "100vw",
+            sizeY: "100vh",
+          });
+
+          const pseudoBg = reactive({
+            positionX: 0,
+            positionY: 0,
+            rotation: 0,
+          });
+
+          const ui = reactive({
+            opacity50: false,
+          });
+
+          const rotateMode = ref("3d");
+
+          const element = reactive({
+            top: 100,
+            left: 100,
+            width: 300,
+            height: 300,
+          });
+
+          const isDragging = ref(false);
+          const startX = ref(0);
+          const startY = ref(0);
+          const startElementX = ref(0);
+          const startElementY = ref(0);
+          const draggable = ref(null);
+
+          // Computed
+          const transformStyle = computed(() => {
             const bgSize =
-              this.background.size === "custom"
-                ? `${this.background.sizeX} ${this.background.sizeY}`
-                : this.background.size;
+              background.size === "custom"
+                ? `${background.sizeX} ${background.sizeY}`
+                : background.size;
 
             return {
-              top: `${this.element.top}px`,
-              left: `${this.element.left}px`,
-              width: `${this.element.width}px`,
-              height: `${this.element.height}px`,
+              top: `${element.top}px`,
+              left: `${element.left}px`,
+              width: `${element.width}px`,
+              height: `${element.height}px`,
               transform:
-                this.rotateMode === "2d"
-                  ? `translate(${this.transforms.translateX}px, ${this.transforms.translateY}px)
-                               rotate(${this.transforms.rotateZ}deg)
-                               scale(${this.transforms.scale})
-                               skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`
-                  : `translate3d(${this.transforms.translateX}px, ${this.transforms.translateY}px, ${this.transforms.translateZ}px)
-                               rotateX(${this.transforms.rotateX}deg)
-                               rotateY(${this.transforms.rotateY}deg)
-                               rotateZ(${this.transforms.rotateZ}deg)
-                               scale(${this.transforms.scale})
-                               skew(${this.transforms.skewX}deg, ${this.transforms.skewY}deg)`,
+                rotateMode.value === "2d"
+                  ? `translate(${transforms.translateX}px, ${transforms.translateY}px)
+                               rotate(${transforms.rotateZ}deg)
+                               scale(${transforms.scale})
+                               skew(${transforms.skewX}deg, ${transforms.skewY}deg)`
+                  : `translate3d(${transforms.translateX}px, ${transforms.translateY}px, ${transforms.translateZ}px)
+                               rotateX(${transforms.rotateX}deg)
+                               rotateY(${transforms.rotateY}deg)
+                               rotateZ(${transforms.rotateZ}deg)
+                               scale(${transforms.scale})
+                               skew(${transforms.skewX}deg, ${transforms.skewY}deg)`,
               transformStyle: "preserve-3d",
               "--bg-size": bgSize,
-              "--bg-pos-x": `${this.pseudoBg.positionX}px`,
-              "--bg-pos-y": `${this.pseudoBg.positionY}px`,
-              "--bg-rotation": `${this.pseudoBg.rotation}deg`,
-              cursor: this.isDragging ? "grabbing" : "grab",
-              opacity: this.ui.opacity50 ? 0.5 : 1,
+              "--bg-pos-x": `${pseudoBg.positionX}px`,
+              "--bg-pos-y": `${pseudoBg.positionY}px`,
+              "--bg-rotation": `${pseudoBg.rotation}deg`,
+              cursor: isDragging.value ? "grabbing" : "grab",
+              opacity: ui.opacity50 ? 0.5 : 1,
             };
-          },
-        },
-        methods: {
-          updateTransform() {
-            // Реактивность Vue автоматически обновит стиль
-            this.syncBackground();
-          },
-          updateBackground() {
-            // Реактивность Vue автоматически обновит стиль
-          },
-          updatePseudoBackground() {
-            // Реактивность Vue автоматически обновит стиль через transformStyle
-          },
-          updateElement() {
-            // Реактивность Vue автоматически обновит стиль
-            this.syncBackground();
-          },
-          startDrag(e) {
-            this.isDragging = true;
-            this.startX = e.clientX;
-            this.startY = e.clientY;
-            this.startElementX = this.element.left;
-            this.startElementY = this.element.top;
-            e.preventDefault();
+          });
 
-            document.addEventListener("mousemove", this.onDrag);
-            document.addEventListener("mouseup", this.stopDrag);
-          },
-          onDrag(e) {
-            if (!this.isDragging) return;
-
-            const deltaX = e.clientX - this.startX;
-            const deltaY = e.clientY - this.startY;
-
-            this.element.left = this.startElementX + deltaX;
-            this.element.top = this.startElementY + deltaY;
-          },
-          stopDrag() {
-            this.isDragging = false;
-            document.removeEventListener("mousemove", this.onDrag);
-            document.removeEventListener("mouseup", this.stopDrag);
-          },
-          syncBackground() {
+          // Methods
+          const syncBackground = () => {
             // Учитываем скролл страницы
             const scrollX = window.scrollX || window.pageXOffset;
             const scrollY = window.scrollY || window.pageYOffset;
 
             // Получаем точные координаты элемента из апи
-            const rect = this.$refs.draggable.getBoundingClientRect();
+            const rect = draggable.value.getBoundingClientRect();
             const visualLeft = rect.left + scrollX;
             const visualTop = rect.top + scrollY;
 
             // Получаем ширину бордера из CSS (из учета что одинаковая)
-            const style = getComputedStyle(this.$refs.draggable);
+            const style = getComputedStyle(draggable.value);
             const bw = parseFloat(style.borderWidth);
-            const s = this.transforms.scale || 1;
-            const w0 = this.element.width + 2 * bw;
-            const h0 = this.element.height + 2 * bw;
+            const s = transforms.scale || 1;
+            const w0 = element.width + 2 * bw;
+            const h0 = element.height + 2 * bw;
 
             let bgPosX = -(visualLeft / s) + w0 / 2 - 2 * bw;
             let bgPosY = -(visualTop / s) + h0 / 2 - 2 * bw;
@@ -402,18 +369,83 @@
             // Обновляем данные для псевдоэлемента
             console.log("scale:", s);
             console.log(`${(100 / s).toFixed(1)}vw auto`);
-            this.background.size = `${(100 / s).toFixed(1)}vw auto`;
-            this.pseudoBg.positionX = bgPosX;
-            this.pseudoBg.positionY = bgPosY;
+            background.size = `${(100 / s).toFixed(1)}vw auto`;
+            pseudoBg.positionX = bgPosX;
+            pseudoBg.positionY = bgPosY;
 
             // Автоматическая компенсация поворота для 2D режима
-            if (this.rotateMode === "2d") {
-              this.pseudoBg.rotation = -this.transforms.rotateZ;
+            if (rotateMode.value === "2d") {
+              pseudoBg.rotation = -transforms.rotateZ;
             } else {
-              this.pseudoBg.rotation = 0;
+              pseudoBg.rotation = 0;
             }
-          },
-        },
+          };
+
+          const updateTransform = () => {
+            // Реактивность Vue автоматически обновит стиль
+            syncBackground();
+          };
+
+          const updateBackground = () => {
+            // Реактивность Vue автоматически обновит стиль
+          };
+
+          const updatePseudoBackground = () => {
+            // Реактивность Vue автоматически обновит стиль через transformStyle
+          };
+
+          const updateElement = () => {
+            // Реактивность Vue автоматически обновит стиль
+            syncBackground();
+          };
+
+          const startDrag = (e) => {
+            isDragging.value = true;
+            startX.value = e.clientX;
+            startY.value = e.clientY;
+            startElementX.value = element.left;
+            startElementY.value = element.top;
+            e.preventDefault();
+
+            document.addEventListener("mousemove", onDrag);
+            document.addEventListener("mouseup", stopDrag);
+          };
+
+          const onDrag = (e) => {
+            if (!isDragging.value) return;
+
+            const deltaX = e.clientX - startX.value;
+            const deltaY = e.clientY - startY.value;
+
+            element.left = startElementX.value + deltaX;
+            element.top = startElementY.value + deltaY;
+          };
+
+          const stopDrag = () => {
+            isDragging.value = false;
+            document.removeEventListener("mousemove", onDrag);
+            document.removeEventListener("mouseup", stopDrag);
+          };
+
+          // Return all data and methods that need to be available in template
+          return {
+            transforms,
+            background,
+            pseudoBg,
+            ui,
+            rotateMode,
+            element,
+            isDragging,
+            draggable,
+            transformStyle,
+            updateTransform,
+            updateBackground,
+            updatePseudoBackground,
+            updateElement,
+            startDrag,
+            syncBackground,
+          };
+        }
       }).mount("#app");
     </script>
   </body>
