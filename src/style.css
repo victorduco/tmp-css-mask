@@ -15,7 +15,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url("tst-bg.png");
+  background-image: url("./assets/tst-bg.png");
   background-size: 100vw auto;
   background-position: 0 0;
   background-repeat: no-repeat;
@@ -32,6 +32,20 @@ body {
   overflow: hidden;
 }
 
+.element-id {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  color: black;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 10;
+  pointer-events: none;
+}
+
 .center-block::before {
   content: "";
   position: absolute;
@@ -39,7 +53,7 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background-image: url("tst-bg.png");
+  background-image: url("./assets/tst-bg.png");
   background-size: var(--bg-size, 100vw auto);
   background-position: var(--bg-pos-x, 0px) var(--bg-pos-y, 0px);
   background-repeat: no-repeat;
