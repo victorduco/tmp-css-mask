@@ -2,18 +2,14 @@
   <div id="app">
     <div class="background-block"></div>
 
-    <!-- Множественные mask элементы -->
-    <MaskElement
-      v-for="maskObj in maskObjects"
-      :key="maskObj.id"
-      :config="maskObj"
-    />
-
-    <!-- Perspective контейнер для отладки (можно убрать) -->
-    <div
-      class="perspective-container"
-      :style="{ perspective: '1000px' }"
-    >
+    <!-- Flexbox контейнер с mask элементами -->
+    <div class="flex-container">
+      <MaskElement
+        v-for="maskObj in maskObjects"
+        :key="maskObj.id"
+        :config="maskObj"
+        :background-image="backgroundImage"
+      />
     </div>
 
     <div class="transform-info">
@@ -56,16 +52,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import MaskElement from './components/MaskElement.vue';
+import { ref, onMounted } from "vue";
+import MaskElement from "./components/MaskElement.vue";
+import backgroundImg from "./assets/tst-bg.png";
+
+// Фоновое изображение для всех элементов
+const backgroundImage = ref(backgroundImg);
 
 // Создаем несколько mask объектов с полной конфигурацией
 const maskObjects = ref([
   {
     id: 1,
     element: {
-      top: 150,
-      left: 200,
+      top: 0,
+      left: 0,
       width: 200,
       height: 200,
     },
@@ -77,7 +77,7 @@ const maskObjects = ref([
       rotateX: 0,
       rotateY: 0,
       rotateZ: 0,
-      scale: 1.5,
+      scale: 0.5,
       skewX: 0,
       skewY: 0,
     },
@@ -91,13 +91,13 @@ const maskObjects = ref([
     ui: {
       opacity50: false,
     },
-    rotateMode: "2d"
+    rotateMode: "2d",
   },
   {
     id: 2,
     element: {
-      top: 300,
-      left: 400,
+      top: 0,
+      left: 0,
       width: 250,
       height: 250,
     },
@@ -109,7 +109,7 @@ const maskObjects = ref([
       rotateX: 0,
       rotateY: 0,
       rotateZ: 0,
-      scale: 2,
+      scale: 1,
       skewX: 0,
       skewY: 0,
     },
@@ -123,13 +123,13 @@ const maskObjects = ref([
     ui: {
       opacity50: false,
     },
-    rotateMode: "3d"
+    rotateMode: "3d",
   },
   {
     id: 3,
     element: {
-      top: 100,
-      left: 600,
+      top: 0,
+      left: 0,
       width: 180,
       height: 180,
     },
@@ -155,8 +155,8 @@ const maskObjects = ref([
     ui: {
       opacity50: false,
     },
-    rotateMode: "2d"
-  }
+    rotateMode: "2d",
+  },
 ]);
 
 // Запуск хаотичной анимации всех элементов
@@ -170,12 +170,10 @@ const startChaos = () => {
         const id = obj.id;
 
         // Обновляем конфигурацию объекта для хаотичного движения
-        obj.transforms.translateX = Math.sin(time * 0.5 + id) * 100;
-        obj.transforms.translateY = Math.cos(time * 0.3 + id) * 80;
+        obj.transforms.translateX = Math.sin(time * 0.5 + id) * 150;
+        obj.transforms.translateY = Math.cos(time * 0.3 + id) * 120;
         obj.transforms.rotateZ = Math.sin(time * 0.2 + id) * 45;
         obj.transforms.scale = 1.5 + Math.sin(time * 0.4 + id) * 0.5;
-        obj.element.left = 400 + Math.sin(time * 0.1 + id) * 200;
-        obj.element.top = 300 + Math.cos(time * 0.15 + id) * 150;
 
         requestAnimationFrame(animate);
       };

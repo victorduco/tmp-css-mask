@@ -12,7 +12,7 @@
 <script setup>
 import { useMaskElement } from '../composables/useMaskElement.js';
 
-const props = defineProps(['config']);
+const props = defineProps(['config', 'backgroundImage']);
 const maskInstance = useMaskElement(props.config);
 
 // Деструктуризируем все необходимые данные и методы
@@ -35,5 +35,7 @@ const {
 </script>
 
 <style scoped>
-/* Стили уже определены в style.css, но можно добавить компонент-специфичные стили */
+.center-block::before {
+  background-image: v-bind('`url(${props.backgroundImage})`');
+}
 </style>
