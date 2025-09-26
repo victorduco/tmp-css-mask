@@ -1,196 +1,63 @@
+<script setup></script>
+
 <template>
-  <div id="app">
-    <div class="background-block"></div>
-
-    <!-- Flexbox контейнер с mask элементами -->
-    <div class="flex-container">
-      <MaskElement
-        v-for="maskObj in maskObjects"
-        :key="maskObj.id"
-        :config="maskObj"
-        :background-image="backgroundImage"
-      />
-    </div>
-
-    <div class="transform-info">
-      <h3>Multiple Mask Elements Demo:</h3>
-      <div class="control-group">
-        <label>Objects Count: {{ maskObjects.length }}</label>
-      </div>
-      <div class="control-group">
-        <button
-          @click="startChaos"
-          style="
-            padding: 10px 20px;
-            background: #ff6b6b;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-right: 10px;
-          "
-        >
-          🎭 START CHAOS ANIMATION
-        </button>
-      </div>
-      <div class="info">
-        <p>✨ Each element automatically syncs its background</p>
-        <p>🎯 Try dragging the elements around</p>
-        <p>🌀 Watch how backgrounds stay in sync during animation</p>
-      </div>
-    </div>
-
-    <div class="scroll-content">
-      <p>Дополнительный контент для скролла</p>
-      <p>Еще один блок текста</p>
-      <p>И еще немного контента</p>
-      <p>Чтобы можно было скроллить страницу</p>
-      <p>Последний блок контента</p>
-    </div>
+  <div class="diamond-grid">
+    <div class="diamond diamond-1"></div>
+    <div class="diamond diamond-2"></div>
+    <div class="diamond diamond-3"></div>
+    <div class="diamond diamond-4"></div>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from "vue";
-import MaskElement from "./components/MaskElement.vue";
-import backgroundImg from "./assets/tst-bg.png";
+<style scoped>
+.diamond-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  max-width: 140vw;
+  max-height: 140vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  gap: 40px;
+}
 
-// Фоновое изображение для всех элементов
-const backgroundImage = ref(backgroundImg);
+.diamond {
+  width: 300px;
+  height: 300px;
+  border: 2px solid;
+}
 
-// Создаем несколько mask объектов с полной конфигурацией
-const maskObjects = ref([
-  {
-    id: 1,
-    element: {
-      top: 0,
-      left: 0,
-      width: 200,
-      height: 200,
-    },
-    transforms: {
-      perspective: 1000,
-      translateX: 0,
-      translateY: 0,
-      translateZ: 0,
-      rotateX: 0,
-      rotateY: 0,
-      rotateZ: 0,
-      scale: 0.5,
-      skewX: 0,
-      skewY: 0,
-    },
-    background: {
-      positionX: -100,
-      positionY: -100,
-      size: "100vw auto",
-      sizeX: "100vw",
-      sizeY: "100vh",
-    },
-    ui: {
-      opacity50: false,
-    },
-    rotateMode: "2d",
-  },
-  {
-    id: 2,
-    element: {
-      top: 0,
-      left: 0,
-      width: 250,
-      height: 250,
-    },
-    transforms: {
-      perspective: 1000,
-      translateX: 0,
-      translateY: 0,
-      translateZ: 0,
-      rotateX: 0,
-      rotateY: 0,
-      rotateZ: 0,
-      scale: 1,
-      skewX: 0,
-      skewY: 0,
-    },
-    background: {
-      positionX: -100,
-      positionY: -100,
-      size: "100vw auto",
-      sizeX: "100vw",
-      sizeY: "100vh",
-    },
-    ui: {
-      opacity50: false,
-    },
-    rotateMode: "3d",
-  },
-  {
-    id: 3,
-    element: {
-      top: 0,
-      left: 0,
-      width: 180,
-      height: 180,
-    },
-    transforms: {
-      perspective: 1000,
-      translateX: 0,
-      translateY: 0,
-      translateZ: 0,
-      rotateX: 0,
-      rotateY: 0,
-      rotateZ: 0,
-      scale: 1.2,
-      skewX: 0,
-      skewY: 0,
-    },
-    background: {
-      positionX: -100,
-      positionY: -100,
-      size: "100vw auto",
-      sizeX: "100vw",
-      sizeY: "100vh",
-    },
-    ui: {
-      opacity50: false,
-    },
-    rotateMode: "2d",
-  },
-]);
+.diamond-1 {
+  grid-column: 1;
+  grid-row: 1;
+  background: linear-gradient(135deg, #2c1810, #3d2914);
+  border-color: #8b4513;
+  box-shadow: 0 0 30px rgba(139, 69, 19, 0.2);
+}
 
-// Запуск хаотичной анимации всех элементов
-const startChaos = () => {
-  // Запускаем анимацию для каждого элемента через небольшую задержку
-  maskObjects.value.forEach((obj, index) => {
-    setTimeout(() => {
-      // Создаем новый экземпляр с анимацией для каждого объекта
-      const animate = () => {
-        const time = Date.now() * 0.001;
-        const id = obj.id;
+.diamond-2 {
+  grid-column: 2;
+  grid-row: 1;
+  background: linear-gradient(135deg, #0f1419, #1a2332);
+  border-color: #4a90e2;
+  box-shadow: 0 0 30px rgba(74, 144, 226, 0.2);
+}
 
-        // Обновляем конфигурацию объекта для хаотичного движения
-        obj.transforms.translateX = Math.sin(time * 0.5 + id) * 150;
-        obj.transforms.translateY = Math.cos(time * 0.3 + id) * 120;
-        obj.transforms.rotateZ = Math.sin(time * 0.2 + id) * 45;
-        obj.transforms.scale = 1.5 + Math.sin(time * 0.4 + id) * 0.5;
+.diamond-3 {
+  grid-column: 1;
+  grid-row: 2;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-color: #0f4c75;
+  box-shadow: 0 0 30px rgba(15, 76, 117, 0.3);
+}
 
-        requestAnimationFrame(animate);
-      };
-
-      animate();
-    }, index * 500);
-  });
-};
-
-onMounted(() => {
-  // Автоматически запускаем хаотичную анимацию через 2 секунды
-  setTimeout(() => {
-    startChaos();
-  }, 2000);
-});
-</script>
-
-<style>
-/* Глобальные стили импортируются из style.css */
+.diamond-4 {
+  grid-column: 2;
+  grid-row: 2;
+  background: linear-gradient(135deg, #2d1b2e, #42213d);
+  border-color: #8b008b;
+  box-shadow: 0 0 30px rgba(139, 0, 139, 0.2);
+}
 </style>

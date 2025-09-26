@@ -1,199 +1,32 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: content-box;
 }
 
 body {
-  font-family: Arial, sans-serif;
+  margin: 0;
+  min-width: 320px;
   min-height: 100vh;
-}
-
-.background-block {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-image: url("./assets/tst-bg.png");
-  background-size: 100vw auto;
-  background-position: 0 0;
-  background-repeat: no-repeat;
-  z-index: -1;
-}
-
-.flex-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 1;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.center-block {
-  position: relative;
-  background-color: black;
-  border: 50px solid rgb(255, 0, 0);
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  z-index: 1;
+  background: #0a0a0a;
   overflow: hidden;
-  flex: 0 0 auto;
 }
 
-.element-id {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  color: black;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 12px;
-  font-weight: bold;
-  z-index: 10;
-  pointer-events: none;
-}
-
-.center-block::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background-image: url("./assets/tst-bg.png");
-  background-size: var(--bg-size, 100vw auto);
-  background-position: var(--bg-pos-x, 0px) var(--bg-pos-y, 0px);
-  background-repeat: no-repeat;
-  transform: rotate(var(--bg-rotation, 0deg));
-  transform-origin: center;
-  pointer-events: none;
-  opacity: 1;
-  z-index: 1;
-}
-
-.scroll-content {
+#app {
+  width: 100vw;
+  height: 100vh;
   position: relative;
-  z-index: 2;
-  padding: 50px;
-  background: white;
-  margin-top: 100vh;
-  min-height: 100vh;
-}
-
-.scroll-content p {
-  margin-bottom: 20px;
-  font-size: 18px;
-  line-height: 1.6;
-  color: #333;
-}
-
-.transform-info {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 15px;
-  border-radius: 8px;
-  font-family: monospace;
-  font-size: 14px;
-  z-index: 1000;
-  min-width: 200px;
-}
-
-.transform-info h3 {
-  margin: 0 0 10px 0;
-  color: #00ff88;
-}
-
-.transform-info div {
-  margin: 5px 0;
-  color: #ffffff;
-}
-
-.control-group {
-  display: flex;
-  align-items: center;
-  margin: 8px 0;
-}
-
-.control-group label {
-  width: 80px;
-  color: #00ff88;
-  font-size: 12px;
-}
-
-.control-group input {
-  width: 60px;
-  margin: 0 5px;
-  padding: 3px 5px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
-  color: white;
-  font-size: 12px;
-}
-
-.control-group input:focus {
-  outline: none;
-  border-color: #00ff88;
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.control-group input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.perspective-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-}
-
-.background-info {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 15px;
-  border-radius: 8px;
-  font-family: monospace;
-  font-size: 14px;
-  z-index: 1000;
-  min-width: 200px;
-}
-
-.background-info h3 {
-  margin: 0 0 10px 0;
-  color: #ff8800;
-}
-
-.background-info select {
-  width: 80px;
-  margin: 0 5px;
-  padding: 3px 5px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
-  color: white;
-  font-size: 12px;
-}
-
-.background-info input[type="checkbox"] {
-  margin: 0 5px;
-  transform: scale(1.2);
+  overflow: hidden;
 }
