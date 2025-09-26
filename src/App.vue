@@ -14,21 +14,22 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-  min-width: 600px;
-  min-height: 350px;
-  min-width: 110vw;
-  min-height: 110vh;
 
+  max-width: 110vw;
+  max-height: 110vh;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  row-gap: 0;
-  gap: 100px;
+  row-gap: -200px;
+  column-gap: 100px;
+  height: -100px;
 }
 
 .diamond {
-  width: 100%;
+  --element-height: 100px;
+  height: var(--element-height);
+  margin-bottom: calc(-1 * var(--element-height));
   aspect-ratio: 1;
   border: 0px;
   transform: rotate(45deg);
