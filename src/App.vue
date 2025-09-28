@@ -68,13 +68,9 @@ const currentY = ref(0);
 
 watch(
   innerOffset,
-  async (o) => {
+  (o) => {
     currentX.value = -o.offsetX;
     currentY.value = -o.offsetY;
-
-    await nextTick();
-    readOuterRect();
-    applyOuterPosition();
   },
   { immediate: false }
 );
@@ -87,15 +83,12 @@ let ro;
 onMounted(() => {
   readOuterRect();
   applyOuterPosition();
-  ro = new ResizeObserver(() => readOuterRect());
-  if (outerDiv.value) ro.observe(outerDiv.value);
 
   window.addEventListener("scroll", onScrollOrResize, { passive: true });
   window.addEventListener("resize", onScrollOrResize);
 });
 
 onBeforeUnmount(() => {
-  ro?.disconnect();
   window.removeEventListener("scroll", onScrollOrResize);
   window.removeEventListener("resize", onScrollOrResize);
 });
