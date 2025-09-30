@@ -23,6 +23,7 @@ onMounted(() => {
 
     if (rectangle1.value?.outerDiv) {
       rectangle1.value.outerDiv.style.transform = `translateX(${xPos}px) translateY(100px) rotate(${rotation1.value}deg) scale(${scale1.value})`;
+      rectangle1.value.updateOffset();
     }
 
     // Second rectangle with opposite animation
@@ -34,6 +35,7 @@ onMounted(() => {
 
     if (rectangle2.value?.outerDiv) {
       rectangle2.value.outerDiv.style.transform = `translateX(${xPos2}px) translateY(-100px) rotate(${rotation2.value}deg) scale(${scale2.value})`;
+      rectangle2.value.updateOffset();
     }
 
     requestAnimationFrame(animate);

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import {
   getCenter,
   getPageCenter,
@@ -21,22 +21,17 @@ const props = defineProps({
 const outerDiv = ref(null);
 const innerDiv = ref(null);
 
-const outerCenter = ref({ x: 0, y: 0 });
 const pageCenter = computed(() => getPageCenter());
 
-onMounted(() => {
-  const updatePosition = () => {
-    if (outerDiv.value && innerDiv.value) {
-      outerCenter.value = getCenter(outerDiv.value);
-      const offset = getOuterOffset(pageCenter.value, outerCenter.value);
-      applyOuterOffset(innerDiv.value, offset, props.rotation, props.scale);
-    }
-    requestAnimationFrame(updatePosition);
-  };
-  requestAnimationFrame(updatePosition);
-});
+const updateOffset = () => {
+  if (outerDiv.value && innerDiv.value) {
+    const outerCenter = getCenter(outerDiv.value);
+    const offset = getOuterOffset(pageCenter.value, outerCenter);
+    applyOuterOffset(innerDiv.value, offset, props.rotation, props.scale);
+  }
+};
 
-defineExpose({ outerDiv });
+defineExpose({ outerDiv, updateOffset });
 </script>
 
 <template>
