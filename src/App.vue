@@ -32,7 +32,7 @@ onMounted(() => {
       const progress = (Math.sin((elapsed * Math.PI) / 1.5) + 1) / 2; // 0 to 1
       const xPos = (progress - 0.5) * 200;
       const rotation = progress * 45;
-      const scale = 1;
+      const scale = 1 + progress;
       outerDiv.value.style.transform = `translateX(${xPos}px) translateY(100px) rotate(${rotation}deg) scale(${scale})`;
 
       // Update inner div offset
@@ -73,18 +73,19 @@ onMounted(() => {
   border: 2px solid red;
   overflow: hidden;
   transform: translateY(100px);
+  transform-origin: center center;
 }
 
 .inner-div {
-  /* width: 100vw;
-  height: 100vh; */
-  transform: translateX(var(--x-offset, 0px)) translateY(var(--y-offset, 0px))
-    rotate(var(--rotation, 0deg)) scale(var(--scale, 1));
+  transform: scale(var(--scale, 1)) rotate(var(--rotation, 0deg))
+    translateX(var(--x-offset, 0px)) translateY(var(--y-offset, 0px));
+  transform-origin: center center;
   width: 100vw;
   height: 100vh;
   margin-left: calc(-50vw + 50%);
   margin-top: calc(-50vh + 50%);
-  opacity: 0.5;
+  opacity: 0.8;
+  filter: blur(2px);
   /* transform: translateX(-100px) translateY(-100px); */
 
   background-image: url("./assets/tst-bg.png");
