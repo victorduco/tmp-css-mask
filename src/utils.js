@@ -1,27 +1,37 @@
-export function updateOuterPosition(centerDivElement) {
-  if (!centerDivElement) {
-    return { top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0 };
-  }
-  const rect = centerDivElement.getBoundingClientRect();
-  return {
-    top: rect.top + window.scrollY,
-    left: rect.left + window.scrollX,
-    right: rect.right + window.scrollX,
-    bottom: rect.bottom + window.scrollY,
-    width: rect.width,
-    height: rect.height,
-  };
+export function applyInnerOffset(innerDivElement, innerOffset) {
+  if (!innerDivElement || !innerOffset) return;
+  innerDivElement.style.setProperty("--x-offset", innerOffset.x + "px");
+  innerDivElement.style.setProperty("--y-offset", innerOffset.y + "px");
 }
 
-export function getOuterCenter(rect) {
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
+export function getCenter(centerDivElement) {
+  if (!centerDivElement) {
+    return { x: 0, y: 0 };
+  }
+  const rect = centerDivElement.getBoundingClientRect();
+  const x = (rect.left + rect.right) / 2;
+  const y = (rect.top + rect.bottom) / 2;
   return { x, y };
 }
 
 export function getPageCenter() {
   return {
-    x: window.scrollX + window.innerWidth / 2,
-    y: window.scrollY + window.innerHeight / 2,
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
   };
+}
+
+export function getOuterOffset(pageCenter, outerCenter) {
+  return {
+    x: pageCenter.x - outerCenter.x,
+    y: pageCenter.y - outerCenter.y,
+  };
+}
+
+export function getInnerOffset(outerOffset) {
+  if (!outerOffset) {
+    return { x: 0, y: 0 };
+  } else {
+    return { x: -outerOffset.x, y: -outerOffset.y };
+  }
 }
