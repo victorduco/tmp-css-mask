@@ -1,7 +1,9 @@
-export function applyInnerOffset(innerDivElement, innerOffset) {
-  if (!innerDivElement || !innerOffset) return;
-  innerDivElement.style.setProperty("--x-offset", innerOffset.x + "px");
-  innerDivElement.style.setProperty("--y-offset", innerOffset.y + "px");
+export function applyOuterOffset(innerDivElement, offset) {
+  if (!innerDivElement || !offset) return;
+  console.log(offset);
+
+  innerDivElement.style.setProperty("--x-offset", offset.x + "px");
+  innerDivElement.style.setProperty("--y-offset", offset.y + "px");
 }
 
 export function getCenter(centerDivElement) {

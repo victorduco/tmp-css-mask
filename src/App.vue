@@ -5,7 +5,7 @@ import {
   getPageCenter,
   getOuterOffset,
   getInnerOffset,
-  applyInnerOffset,
+  applyOuterOffset,
 } from "./utils.js";
 
 // Vars
@@ -20,30 +20,24 @@ const pageCenter = computed(() => getPageCenter());
 
 onMounted(() => {
   console.log("outerCenter", outerCenter.value);
-  console.log("innerCenter", innerCenter.value);
   console.log("pageCenter", pageCenter.value);
+  console.log("outerOffset", outerOffset.value);
 });
 
 // test
 const outerOffset = computed(() =>
   getOuterOffset(pageCenter.value, outerCenter.value)
 );
-const innerOffset = computed(() => getInnerOffset(outerOffset.value));
-
 watchEffect(() => {
   if (!innerDiv.value) return;
-  applyInnerOffset(innerDiv.value, innerOffset.value);
+  applyOuterOffset(innerDiv.value, outerOffset.value);
 });
 </script>
 
 <template>
   <div class="app">
     <div ref="outerDiv" class="outer-div">
-      <div
-        ref="innerDiv"
-        class="inner-div"
-        :style="{ '--x-offset': innerOffset.x, '--y-offset': innerOffset.y }"
-      ></div>
+      <div ref="innerDiv" class="inner-div"></div>
     </div>
   </div>
 </template>
@@ -66,19 +60,19 @@ watchEffect(() => {
   height: 150px;
   border: 2px solid red;
   overflow: visible;
-  transform: translateX(100px) translateY(100px) rotate(45deg) scale(2);
+  transform: translateX(100px) translateY(100px);
 }
 
 .inner-div {
   /* width: 100vw;
   height: 100vh; */
-  /* transform: translateX(--x-offset, 0), translateY(--y-offset, 0); */
+  transform: translateX(var(--x-offset, 0px)) translateY(var(--y-offset, 0px));
   width: 100vw;
   height: 100vh;
   margin-left: calc(-50vw + 50%);
   margin-top: calc(-50vh + 50%);
   opacity: 0.5;
-  transform: scale(0.5) rotate(-45deg) translateX(-100px) translateY(-100px);
+  /* transform: translateX(-100px) translateY(-100px); */
 
   background-image: url("./assets/tst-bg.png");
   /* background-color: rgb(0, 0, 0); */
