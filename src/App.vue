@@ -13,7 +13,7 @@ import {
 const outerDiv = ref(null);
 const innerDiv = ref(null);
 
-const outerCenter = computed(() => getCenter(outerDiv.value));
+const outerCenter = ref({ x: 0, y: 0 });
 const innerCenter = computed(() => getCenter(outerDiv.value));
 
 const pageCenter = computed(() => getPageCenter());
@@ -21,16 +21,28 @@ const pageCenter = computed(() => getPageCenter());
 onMounted(() => {
   console.log("outerCenter", outerCenter.value);
   console.log("pageCenter", pageCenter.value);
-  console.log("outerOffset", outerOffset.value);
-});
 
-// test
-const outerOffset = computed(() =>
-  getOuterOffset(pageCenter.value, outerCenter.value)
-);
-watchEffect(() => {
-  if (!innerDiv.value) return;
-  applyOuterOffset(innerDiv.value, outerOffset.value);
+  let startTime = Date.now();
+
+  // Update position on every frame
+  const updatePosition = () => {
+    if (outerDiv.value && innerDiv.value) {
+      // Animate outer div position
+      const elapsed = (Date.now() - startTime) / 1000;
+      const progress = (Math.sin((elapsed * Math.PI) / 1.5) + 1) / 2; // 0 to 1
+      const xPos = (progress - 0.5) * 200;
+      const rotation = progress * 45;
+      const scale = 1;
+      outerDiv.value.style.transform = `translateX(${xPos}px) translateY(100px) rotate(${rotation}deg) scale(${scale})`;
+
+      // Update inner div offset
+      outerCenter.value = getCenter(outerDiv.value);
+      const offset = getOuterOffset(pageCenter.value, outerCenter.value);
+      applyOuterOffset(innerDiv.value, offset, rotation, scale);
+    }
+    requestAnimationFrame(updatePosition);
+  };
+  requestAnimationFrame(updatePosition);
 });
 </script>
 
@@ -59,14 +71,15 @@ watchEffect(() => {
   width: 150px;
   height: 150px;
   border: 2px solid red;
-  overflow: visible;
-  transform: translateX(100px) translateY(100px);
+  overflow: hidden;
+  transform: translateY(100px);
 }
 
 .inner-div {
   /* width: 100vw;
   height: 100vh; */
-  transform: translateX(var(--x-offset, 0px)) translateY(var(--y-offset, 0px));
+  transform: translateX(var(--x-offset, 0px)) translateY(var(--y-offset, 0px))
+    rotate(var(--rotation, 0deg)) scale(var(--scale, 1));
   width: 100vw;
   height: 100vh;
   margin-left: calc(-50vw + 50%);

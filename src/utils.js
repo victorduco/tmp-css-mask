@@ -1,9 +1,11 @@
-export function applyOuterOffset(innerDivElement, offset) {
+export function applyOuterOffset(innerDivElement, offset, rotation, scale) {
   if (!innerDivElement || !offset) return;
   console.log(offset);
 
   innerDivElement.style.setProperty("--x-offset", offset.x + "px");
   innerDivElement.style.setProperty("--y-offset", offset.y + "px");
+  innerDivElement.style.setProperty("--rotation", -rotation + "deg");
+  innerDivElement.style.setProperty("--scale", 1 / scale);
 }
 
 export function getCenter(centerDivElement) {
