@@ -63,8 +63,7 @@ defineExpose({ outerDiv });
   height: 100vh;
   margin-left: calc(-50vw + 50%);
   margin-top: calc(-50vh + 50%);
-  opacity: 0.5;
-  filter: blur(2px);
+  opacity: 1;
 
   background-image: url("../assets/tst-bg.png");
   background-position: 50% 50%;
